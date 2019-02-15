@@ -9,7 +9,7 @@ import {
 } from '../actions';
 
 const initialState = {
-    isLoggedIn: false
+    isLoggedIn: false, user: {}
 };
 
 const authReducer = (state = initialState, action) => {

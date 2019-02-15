@@ -5,7 +5,10 @@ import {
     LOGIN_REQUEST, 
     LOGIN_SUCCESS, 
     LOGIN_ERROR, 
-    LOGOUT 
+    LOGOUT,
+    signup,
+    login,
+    logout 
 } from './auth';
 
 
@@ -16,5 +19,8 @@ export {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGIN_ERROR,
-    LOGOUT
+    LOGOUT,
+    signup,
+    login,
+    logout
 }; 
