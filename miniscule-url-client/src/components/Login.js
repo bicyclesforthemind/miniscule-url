@@ -6,15 +6,28 @@ import { login } from '../actions';
 
 class Login extends Component {
 
-    
+    submitLoginForm = (event) => {
+        event.preventDefault();
+        const { login } = this.props;
+
+        login();
+    };
 
     render() {
-        const { email, password, login } = this.props;
+        const { email, password } = this.props;
 
         return (
-            <input></input>
-            <input></input>
-            <button></button>
+            <form>
+                <div>
+                    <label>Email</label>
+                    <input type="email" onChange={() => {}} value={email} />
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" onChange={() => {}} value={password} />
+                </div>
+                <button onClick={() => this.submitLoginForm()}>Submit</button>
+            </form>
         )
     }
 }
