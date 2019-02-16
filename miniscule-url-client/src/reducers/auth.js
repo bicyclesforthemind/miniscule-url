@@ -5,11 +5,19 @@ import {
     LOGIN_REQUEST, 
     LOGIN_SUCCESS, 
     LOGIN_ERROR,
-    LOGOUT
+    LOGOUT,
+    SET_EMAIL,
+    SET_PASSWORD,
+    SET_CONFIRM_PASSWORD
 } from '../actions';
 
 const initialState = {
-    isLoggedIn: false, user: {}
+    isLoggedIn: false,
+    isSignup: true,
+    user: {},
+    email: '',
+    password: '',
+    confirmPassword: ''
 };
 
 const authReducer = (state = initialState, action) => {
@@ -17,17 +25,47 @@ const authReducer = (state = initialState, action) => {
         case SIGNUP_REQUEST:
             return {};
         case SIGNUP_SUCCESS:
-            return {};
+            return {
+                ...state,
+                isSignup: !state.isSignup
+            };
         case SIGNUP_ERROR:
-            return {};
+            return {
+                ...state
+            };
         case LOGIN_REQUEST:
-            return {};
+            return {
+                ...state
+            };
         case LOGIN_SUCCESS:
-            return {};
+            return {
+                ...state,
+                isLoggedIn: !state.isLoggedIn
+            };
         case LOGIN_ERROR:
-            return {};
+            return {
+                ...state
+            };
         case LOGOUT:
-            return {};
+            return {
+                ...state,
+                isLoggedIn: !state.isLoggedIn
+            };
+        case SET_EMAIL:
+            return {
+                ...state,
+                email: action.payload
+            };
+        case SET_PASSWORD:
+            return {
+                ...state,
+                password: action.payload
+            };
+        case SET_CONFIRM_PASSWORD:
+            return {
+                ...state,
+                confirmPassword: action.payload
+            };
         default:
             return state;
     }

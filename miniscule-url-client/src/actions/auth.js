@@ -11,14 +11,18 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 
 export const LOGOUT = 'LOGOUT';
 
+export const SET_EMAIL = 'SET_EMAIL';
+export const SET_PASSWORD = 'SET_PASSWORD';
+export const SET_CONFIRM_PASSWORD = 'SET_CONFIRM_PASSWORD';
+
 const signupRequest = () => ({
     type: SIGNUP_REQUEST
 });
 
-const signupSuccess = ({username, password}) => ({
+const signupSuccess = ({email, password}) => ({
     type: SIGNUP_SUCCESS,
     payload: {
-        username,
+        email,
         password
     }
 });
@@ -32,10 +36,10 @@ const loginRequest = () => ({
     type: LOGIN_REQUEST
 });
 
-const loginSuccess = ({username, password}) => ({
+const loginSuccess = ({email, password}) => ({
     type: LOGIN_SUCCESS,
     payload: {
-        username,
+        email,
         password
     }
 });
@@ -43,6 +47,21 @@ const loginSuccess = ({username, password}) => ({
 const loginError = (error) => ({
     type: LOGIN_ERROR,
     payload: error
+});
+
+export const setEmail = (email) => ({
+    type: SET_EMAIL,
+    payload: email
+});
+
+export const setPassword = (password) => ({
+    type: SET_PASSWORD,
+    payload: password
+});
+
+export const setConfirmPassword = (confirmPassword) => ({
+    type: SET_CONFIRM_PASSWORD,
+    payload: confirmPassword
 });
 
 export const signup = (email, password) => {
