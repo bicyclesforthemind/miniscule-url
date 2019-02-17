@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import AuthForm from './AuthForm';
+import UrlForm from './UrlForm';
 
 import { connect } from 'react-redux';
 
@@ -10,9 +11,17 @@ class Dashboard extends Component {
 
         return (
             <div>
-                { !isLoggedIn && (
-                    <AuthForm />
-                )}
+                {
+                    isLoggedIn ? (
+                        <div>
+                            <h2>URLs</h2>
+                            <button>Sign Out</button>
+                            <UrlForm />
+                        </div>
+                    ) : (
+                        <AuthForm />
+                    )
+                }
             </div>
         )
     }
