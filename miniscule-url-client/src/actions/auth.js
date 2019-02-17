@@ -9,7 +9,9 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 
-export const LOGOUT = 'LOGOUT';
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_ERROR = 'LOGOUT_ERROR';
 
 export const SET_EMAIL = 'SET_EMAIL';
 export const SET_PASSWORD = 'SET_PASSWORD';
@@ -49,6 +51,19 @@ const loginError = (error) => ({
     payload: error
 });
 
+const logoutRequest = () => ({
+    type: LOGOUT_REQUEST
+});
+
+const logoutSuccess = () => ({
+    type: LOGOUT_SUCCESS
+});
+
+const logoutError = (error) => ({
+    type: LOGOUT_ERROR,
+    payload: error
+});
+
 export const setEmail = (email) => ({
     type: SET_EMAIL,
     payload: email
@@ -75,9 +90,11 @@ export const signup = (email, password) => {
                 'Content-Type': 'application/json'
             },
             mode: 'cors',
-            body: JSON.stringify({
-                email,
-                password
+            body: JSON.stringify({ 
+                user: {
+                    email,
+                    password
+                }
             })
         })
         .then((response) => dispatch(signupSuccess(response)))
@@ -96,16 +113,32 @@ export const login = (email, password) => {
                 'Content-Type': 'application/json'
             },
             mode: 'cors',
-            body: JSON.stringify({
-                email,
-                password
+            body: JSON.stringify({ 
+                user: {
+                    email,
+                    password
+                }
             })
         })
-        .then((response) => dispatch(loginSuccess(response)))
+        .then((response) => {
+            // localStorage.setItem('user', ); // Set auth header 
+            dispatch(loginSuccess(response));
+        })
         .catch((error) => dispatch(loginError(error)));
     };
 };
 
-export const logout = () => ({
-    type: LOGOUT
-});
+export const logout = () => {
+    return (dispatch) => {
+        dispatch(logoutRequest());
+
+        return fetch(`${API_URL}/logout`, {
+            method: 'DELETE',
+            headers: {
+            },
+            mode: 'cors'
+        })
+        .then((response) => dispatch(logoutSuccess()))
+        .catch((error) => dispatch(logoutError(error)));
+    };
+};

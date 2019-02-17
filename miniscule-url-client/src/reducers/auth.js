@@ -5,16 +5,19 @@ import {
     LOGIN_REQUEST, 
     LOGIN_SUCCESS, 
     LOGIN_ERROR,
-    LOGOUT,
+    LOGOUT_REQUEST,
+    LOGOUT_SUCCESS,
+    LOGOUT_ERROR,
     SET_EMAIL,
     SET_PASSWORD,
     SET_CONFIRM_PASSWORD
 } from '../actions';
 
 const initialState = {
+    isLoading: false,
     isLoggedIn: false,
     isSignup: true,
-    user: {},
+    error: {},
     email: '',
     password: '',
     confirmPassword: ''
@@ -23,33 +26,55 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case SIGNUP_REQUEST:
-            return {};
+            return {
+                ...state,
+                isLoading: true
+            };
         case SIGNUP_SUCCESS:
             return {
                 ...state,
-                isSignup: !state.isSignup
+                isSignup: !state.isSignup,
+                isLoading: false
             };
         case SIGNUP_ERROR:
             return {
-                ...state
+                ...state,
+                error: action.payload,
+                isLoading: false
             };
         case LOGIN_REQUEST:
             return {
-                ...state
+                ...state,
+                isLoading: true
             };
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                isLoggedIn: !state.isLoggedIn
+                isLoggedIn: !state.isLoggedIn,
+                isLoading: false
             };
         case LOGIN_ERROR:
             return {
-                ...state
+                ...state,
+                error: action.payload,
+                isLoading: false
             };
-        case LOGOUT:
+        case LOGOUT_REQUEST:
             return {
                 ...state,
-                isLoggedIn: !state.isLoggedIn
+                isLoading: true
+            };
+        case LOGOUT_SUCCESS:
+            return {
+                ...state,
+                isLoggedIn: !state.isLoggedIn,
+                isLoading: false
+            };
+        case LOGOUT_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                isLoading: false
             };
         case SET_EMAIL:
             return {

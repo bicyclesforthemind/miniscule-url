@@ -20,7 +20,12 @@ class AuthForm extends Component {
                 confirmPassword 
             } = this.props;
 
-            // TODO: check confirmPassword
+            if (password === confirmPassword) {
+                signup(email, password);
+            }
+            else {
+                // TODO: add error
+            }
         }
         else {
             const { login, email, password } = this.props;
@@ -37,7 +42,8 @@ class AuthForm extends Component {
             setEmail,
             setPassword,
             setConfirmPassword, 
-            isSignup } = this.props;
+            isSignup 
+        } = this.props;
 
         return (
             
