@@ -10,6 +10,9 @@ Rails.application.routes.draw do
                sessions: 'api/v1/sessions',
                registrations: 'api/v1/registrations'
              }
+
+  get '/:miniscule_url', to: 'api/v1/urls#show'
+  
   namespace :api do
    namespace :v1 do
     resources :urls
