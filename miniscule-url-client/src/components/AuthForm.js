@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 
-import { login, signup, setEmail, setPassword, setConfirmPassword } from '../actions';
+import { login, signup, setEmail, setPassword, setConfirmPassword, setIsSignup } from '../actions/auth';
 
 class AuthForm extends Component {
 
@@ -10,15 +10,15 @@ class AuthForm extends Component {
         action(event.target.value);
     };
 
-    submitAuthForm = (event, isSignup) => {
+    handleIsSignup = (event, action, isSignup) => {
+        event.preventDefault();
+        action(isSignup);
+    };
+
+    submitAuthForm = (event, email, password, confirmPassword, isSignup) => {
         event.preventDefault();
         if (isSignup) {
-            const { 
-                signup, 
-                email, 
-                password, 
-                confirmPassword 
-            } = this.props;
+            const { signup } = this.props;
 
             if (password === confirmPassword) {
                 signup(email, password);
@@ -28,7 +28,7 @@ class AuthForm extends Component {
             }
         }
         else {
-            const { login, email, password } = this.props;
+            const { login } = this.props;
 
             login(email, password);
         }
@@ -41,8 +41,11 @@ class AuthForm extends Component {
             confirmPassword,
             setEmail,
             setPassword,
-            setConfirmPassword, 
-            isSignup 
+            setConfirmPassword,
+            setIsSignup, 
+            isSignup,
+            signup,
+            login
         } = this.props;
 
         return (
@@ -55,29 +58,29 @@ class AuthForm extends Component {
                     )
                 }
                 <div>
-                    <label>Email</label>
-                    <input type="email" onChange={(event) => {this.handleChange(event, setEmail)}} value={email} />
+                    <label htmlFor="email">Email</label>
+                    <input type="email" name="email" onChange={(event) => {this.handleChange(event, setEmail)}} value={email} />
                 </div>
                 <div>
-                    <label>Password</label>
-                    <input type="password" onChange={(event) => {this.handleChange(event, setPassword)}} value={password} />
+                    <label htmlFor="password">Password</label>
+                    <input type="password" name="password" onChange={(event) => {this.handleChange(event, setPassword)}} value={password} />
                 </div>
                 { isSignup && (
                     <div>
-                        <label>Confirm Password</label>
-                        <input type="password" onChange={(event) => {this.handleChange(event, setConfirmPassword)}} value={confirmPassword} />
+                        <label htmlFor="confirmPassword">Confirm Password</label>
+                        <input type="password" name="confirmPassword" onChange={(event) => {this.handleChange(event, setConfirmPassword)}} value={confirmPassword} />
                     </div>
                 ) }
                 {
                     isSignup ? (
                         <div>
-                            <button onClick={(event) => this.submitAuthForm(event, isSignup)}>Sign Up</button>
-                            <button>Login</button>
+                            <button onClick={(event) => this.submitAuthForm(event, email, password, confirmPassword, isSignup)}>Sign Up</button>
+                            <button onClick={(event) => this.handleIsSignup(event, setIsSignup, false)}>Login</button>
                         </div>
                     ) : (
                         <div>
-                            <button onClick={(event) => this.submitAuthForm(event, isSignup)}>Login</button>
-                            <button>Sign Up</button>
+                            <button onClick={(event) => this.submitAuthForm(event, email, password, '', isSignup)}>Login</button>
+                            <button onClick={(event) => this.handleIsSignup(event, setIsSignup, true)}>Sign Up</button>
                         </div>
                     )
                 }
@@ -98,6 +101,7 @@ const mapDispatchToProps = (dispatch) => ({
     setEmail: (email) => dispatch(setEmail(email)),
     setPassword: (password) => dispatch(setPassword(password)),
     setConfirmPassword: (confirmPassword) => dispatch(setConfirmPassword(confirmPassword)),
+    setIsSignup: (isSignup) => dispatch(setIsSignup(isSignup)),
     signup: (email, password) => dispatch(signup(email, password)),
     login: (email, password) => dispatch(login(email, password))
 });

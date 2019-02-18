@@ -5,6 +5,8 @@ import UrlForm from './UrlForm';
 
 import { connect } from 'react-redux';
 
+import '../App.css';
+
 class Dashboard extends Component {
     render() {
         const { isLoggedIn } = this.props;
