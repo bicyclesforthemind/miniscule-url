@@ -1,9 +1,17 @@
-const API_URL = ''; // TODO: Fill this api url once the backend is running. 
+import axios from 'axios';
+
+const API_URL = 'http://localhost:3000'; // TODO: Fill this api url once the backend is running. 
+
+const REQUEST_HEADERS = {
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+};
 
 export const SIGNUP_REQUEST = 'SIGNUP_REQUEST';
 export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 export const SIGNUP_ERROR = 'SIGNUP_ERROR';
-
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -16,17 +24,15 @@ export const LOGOUT_ERROR = 'LOGOUT_ERROR';
 export const SET_EMAIL = 'SET_EMAIL';
 export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_CONFIRM_PASSWORD = 'SET_CONFIRM_PASSWORD';
+export const SET_IS_SIGNUP = 'SET_IS_SIGNUP';
+export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 
 const signupRequest = () => ({
     type: SIGNUP_REQUEST
 });
 
-const signupSuccess = ({email, password}) => ({
-    type: SIGNUP_SUCCESS,
-    payload: {
-        email,
-        password
-    }
+const signupSuccess = () => ({
+    type: SIGNUP_SUCCESS
 });
 
 const signupError = (error) => ({
@@ -38,12 +44,8 @@ const loginRequest = () => ({
     type: LOGIN_REQUEST
 });
 
-const loginSuccess = ({email, password}) => ({
-    type: LOGIN_SUCCESS,
-    payload: {
-        email,
-        password
-    }
+const loginSuccess = () => ({
+    type: LOGIN_SUCCESS
 });
 
 const loginError = (error) => ({
@@ -79,66 +81,80 @@ export const setConfirmPassword = (confirmPassword) => ({
     payload: confirmPassword
 });
 
-export const signup = (email, password) => {
-    return (dispatch) => {
-        dispatch(signupRequest());
+export const setIsSignup = (isSignup) => ({
+    type: SET_IS_SIGNUP,
+    payload: isSignup
+});
 
-        return fetch(`${API_URL}/signup`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify({ 
+export const setAuthToken = (authToken) => ({
+    type: SET_AUTH_TOKEN,
+    payload: authToken
+}); 
+
+export const signup = (email, password) => {
+    return async (dispatch) => {
+        try {
+            dispatch(signupRequest());
+            
+            const response = await axios.post(`${API_URL}/signup`, {
                 user: {
-                    email,
+                    email, 
                     password
                 }
-            })
-        })
-        .then((response) => dispatch(signupSuccess(response)))
-        .catch((error) => dispatch(signupError(error)));
+            }, REQUEST_HEADERS);
+
+            console.log(response);
+
+            dispatch(signupSuccess());
+        }
+        catch (error) {
+            dispatch(signupError(error));
+        }
     };
 };
 
 export const login = (email, password) => {
-    return (dispatch) => {
-        dispatch(loginRequest());
+    return async (dispatch) => {
+        try {
+            dispatch(loginRequest());
 
-        return fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify({ 
+            const response = await axios.post(`${API_URL}/login`, {
                 user: {
                     email,
                     password
                 }
-            })
-        })
-        .then((response) => {
-            // localStorage.setItem('user', ); // Set auth header 
-            dispatch(loginSuccess(response));
-        })
-        .catch((error) => dispatch(loginError(error)));
+            }, REQUEST_HEADERS);
+
+            console.log(`loginSuccess: ${JSON.stringify(response)}`);
+
+            dispatch(setAuthToken(response.headers.authorization));
+            // localStorage.setItem('user', response.headers.authorization);
+            dispatch(loginSuccess());
+        }
+        catch (error) {
+            dispatch(loginError(error));
+        }
     };
 };
 
 export const logout = () => {
-    return (dispatch) => {
-        dispatch(logoutRequest());
+    return async (dispatch) => {
+        try {
+            dispatch(logoutRequest());
 
-        return fetch(`${API_URL}/logout`, {
-            method: 'DELETE',
-            headers: {
-            },
-            mode: 'cors'
-        })
-        .then((response) => dispatch(logoutSuccess()))
-        .catch((error) => dispatch(logoutError(error)));
+            const response = await axios.delete(`${API_URL}/logout`, 
+            {
+                headers: {
+                    ...REQUEST_HEADERS.headers,
+                    'Authorization': localStorage.getItem('user')
+                }
+            });
+
+            localStorage.clear();
+            dispatch(logoutSuccess());
+        }
+        catch (error) {
+            dispatch(logoutError(error));
+        }
     };
 };

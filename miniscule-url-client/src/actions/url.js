@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/';
+const API_URL = 'http://localhost:3000';
+
+const REQUEST_HEADERS = {
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+};
 
 const getRequestHeaders = () => ({
     headers: {
@@ -10,6 +17,8 @@ const getRequestHeaders = () => ({
     }
 });
 
+export const SET_URL = 'SET_URL';
+
 export const POST_URL_REQUEST = 'POST_URL_REQUEST';
 export const POST_URL_SUCCESS = 'POST_URL_SUCCESS';
 export const POST_URL_ERROR = 'POST_URL_ERROR';
@@ -17,8 +26,6 @@ export const POST_URL_ERROR = 'POST_URL_ERROR';
 export const GET_URLS_REQUEST = 'GET_URLS_REQUEST';
 export const GET_URLS_SUCCESS = 'GET_URLS_SUCCESS';
 export const GET_URLS_ERROR = 'GET_URLS_ERROR';
-
-export const SET_URL = 'SET_URL';
 
 const postUrlRequest = () => ({
     type: POST_URL_REQUEST
@@ -57,9 +64,13 @@ export const getUrls = () => {
         try {
             dispatch(getUrlsRequest());
 
-            const response = await axios.get(`${API_URL}/api/v1/url`, getRequestHeaders());
+            console.log(getRequestHeaders());
 
-            dispatch(getUrlsSuccess(response.data.urls));
+            const response = await axios.get(`${API_URL}/api/v1/urls`, getRequestHeaders());
+
+            console.log(`response: ${JSON.stringify(response)}`);
+
+            dispatch(getUrlsSuccess(response.data));
         }
         catch (error) {
             dispatch(getUrlsError(error));
@@ -72,10 +83,8 @@ export const postUrl = (url) => {
         try {
             dispatch(postUrlRequest());
 
-            const response = await axios.post(`${API_URL}/api/v1/url`, {
-                url: {
-                 original_url: url 
-                }
+            const response = await axios.post(`${API_URL}/api/v1/urls`, {
+                original_url: url 
             }, getRequestHeaders());
 
             dispatch(postUrlSuccess());
