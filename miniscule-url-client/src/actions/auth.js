@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000'; // TODO: Fill this api url once the backend is running. 
+const API_URL = `http://localhost:3001`; // TODO: Fill this api url once the backend is running. 
 
 const REQUEST_HEADERS = {
     headers: {
@@ -134,12 +134,12 @@ export const login = (email, password) => {
                 }
             }, REQUEST_HEADERS);
 
-
             // dispatch(setAuthToken(response.headers.authorization));
             localStorage.setItem('user', response.headers.authorization);
             dispatch(loginSuccess());
         }
         catch (error) {
+            console.log(API_URL);
             dispatch(loginError({
                 header: 'Invalid Signin Credientials',
                 content: 'Please try again.'

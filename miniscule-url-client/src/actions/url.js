@@ -1,13 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000';
-
-const REQUEST_HEADERS = {
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-};
+const API_URL = `http://localhost:3001`;
 
 const getRequestHeaders = () => ({
     headers: {
