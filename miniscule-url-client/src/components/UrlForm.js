@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { setUrl, postUrl, getUrls  } from '../actions/url';
 
 import { connect } from 'react-redux';
+import { Segment, Form, Table, Button, Message } from 'semantic-ui-react';
 
 class UrlForm extends Component {
 
@@ -15,8 +16,10 @@ class UrlForm extends Component {
 
         const { postUrl, getUrls } = this.props;
 
-        postUrl(url);
-        getUrls();
+        postUrl(url)
+        .then(() => getUrls())
+        .catch((error) => console.error(error));
+        
     };
 
     componentDidMount() {
@@ -26,31 +29,42 @@ class UrlForm extends Component {
     }
 
     render() {
-        const { url, urls, setUrl } = this.props;
+        const { 
+            url, 
+            urls, 
+            setUrl,
+            error
+         } = this.props;
 
         return (
             <div>
-                <form>
-                    <input type="url" onChange={(event) => this.handleChange(event, setUrl)} value={url} />
-                    <button onClick={(event) => this.handleSubmitUrlForm(event, url)}>Create URL</button>
-                </form>
-                <table>
-                <tr>
-                    <th>Original URL</th>
-                    <th>Miniscule URL</th>
-                    <th>Hit Count</th>
-                </tr>
-                {
-                    urls.map(({original_url, root_url, miniscule_url, hit_count}, index) => (
-                        <tr>
-                            <td>{`${original_url}`}</td>
-                            <td><a href={`${root_url + '/t/' + miniscule_url}`}>{`${root_url + '/t/' + miniscule_url}`}</a></td>
-                            <td>{`${hit_count}`}</td>
-                        </tr>
-                    ))
-                }
-                </table>
-                
+                <Segment padded>
+                    <Form>
+                        <Form.Input type="url" value={url} fluid onChange={(event) => this.handleChange(event, setUrl)} />
+                        { (Object.keys(error).length !== 0) && ( <Message error header={error.header} content={error.content} visible /> )}
+                        <Button type="submit" color="red" onClick={(event) => this.handleSubmitUrlForm(event, url)}>Create URL</Button>
+                    </Form>
+                </Segment>
+                <Table celled>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>Original URL</Table.HeaderCell>
+                            <Table.HeaderCell>Miniscule URL</Table.HeaderCell>
+                            <Table.HeaderCell>Hit Count</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {
+                            urls.map(({original_url, root_url, miniscule_url, hit_count}, index) => (
+                                <Table.Row>
+                                    <Table.Cell>{`${original_url}`}</Table.Cell>
+                                    <Table.Cell><a href={`${root_url + '/t/' + miniscule_url}`}>{`${root_url + '/t/' + miniscule_url}`}</a></Table.Cell>
+                                    <Table.Cell>{`${hit_count}`}</Table.Cell>
+                                </Table.Row>
+                            ))
+                        }
+                    </Table.Body>
+                </Table>
             </div>
         )
     }
@@ -58,7 +72,8 @@ class UrlForm extends Component {
 
 const mapStateToProps = (state) => ({
     url: state.url.url,
-    urls: state.url.urls
+    urls: state.url.urls,
+    error: state.url.error
 });
 
 const mapDispatchToProps = (dispatch) => ({

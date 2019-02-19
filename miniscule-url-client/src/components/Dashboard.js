@@ -2,24 +2,30 @@ import React, { Component } from 'react';
 
 import AuthForm from './AuthForm';
 import UrlForm from './UrlForm';
+import { Button, Grid, Header } from 'semantic-ui-react';
+
+import { logout } from '../actions/auth';
 
 import { connect } from 'react-redux';
 
-import '../App.css';
 
 class Dashboard extends Component {
     render() {
-        const { isLoggedIn } = this.props;
+        const { isLoggedIn, logout } = this.props;
 
         return (
             <div>
                 {
-                    isLoggedIn ? (
-                        <div>
-                            <h2>URLs</h2>
-                            <button>Sign Out</button>
-                            <UrlForm />
-                        </div>
+                    localStorage.getItem('user') ? (
+                        <Grid style={{ height: '90%' }} veriticalAlign='middle' padded>
+                            <Grid.Column style={{ maxWidth: '400' }}>
+                                <Button floated="right" onClick={() => logout()}>Sign Out</Button>
+                                <Header as="h2" textAlign="left">
+                                    Urls
+                                </Header>
+                                <UrlForm />
+                            </Grid.Column>
+                        </Grid>
                     ) : (
                         <AuthForm />
                     )
@@ -33,4 +39,8 @@ const mapStateToProps = (state) => ({
     isLoggedIn: state.auth.isLoggedIn
 });
 
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = (dispatch) => ({
+    logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
