@@ -17,14 +17,17 @@ class Dashboard extends Component {
             <div>
                 {
                     localStorage.getItem('user') ? (
-                        <Grid style={{ height: '90%' }} veriticalAlign='middle' padded>
-                            <Grid.Column style={{ maxWidth: '400' }}>
-                                <Button floated="right" onClick={() => logout()}>Sign Out</Button>
-                                <Header as="h2" textAlign="left">
-                                    Urls
-                                </Header>
-                                <UrlForm />
-                            </Grid.Column>
+                        <Grid style={{ height: '90%' }} textAlign="left" veriticalAlign='middle' padded>
+                            <Grid.Row></Grid.Row>
+                            <Grid.Row>
+                                <Grid.Column style={{maxWidth: '400'}}>
+                                    <Button floated="right" onClick={() => logout()}>Sign Out</Button>
+                                    <Header as="h1" textAlign="left" size="huge">
+                                        URLs
+                                    </Header>
+                                    <UrlForm />
+                                </Grid.Column>
+                            </Grid.Row>
                         </Grid>
                     ) : (
                         <AuthForm />

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `http://localhost:3001`; // TODO: Fill this api url once the backend is running. 
+const API_URL = `http://localhost:3001`;
 
 const REQUEST_HEADERS = {
     headers: {

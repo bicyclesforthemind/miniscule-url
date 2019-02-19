@@ -12,7 +12,7 @@ import {
 
 import { connect } from 'react-redux';
 
-import { login, signup, setEmail, setPassword, setConfirmPassword, setIsSignup } from '../actions/auth';
+import { login, signup, setEmail, setPassword, setConfirmPassword, setIsSignup, setError } from '../actions/auth';
 
 class AuthForm extends Component {
 
@@ -28,13 +28,16 @@ class AuthForm extends Component {
     submitAuthForm = (event, email, password, confirmPassword, isSignup) => {
         event.preventDefault();
         if (isSignup) {
-            const { signup } = this.props;
+            const { signup, setError } = this.props;
 
-            if (password === confirmPassword) {
+            if (password === confirmPassword && password.length > 5) {
                 signup(email, password);
             }
             else {
-                // TODO: add error
+                setError({
+                    header: 'Invalid Signup',
+                    content: 'Please try again.'
+                });
             }
         }
         else {
@@ -54,57 +57,61 @@ class AuthForm extends Component {
             setConfirmPassword,
             setIsSignup, 
             isSignup,
-            signup,
-            login,
             error
         } = this.props;
 
         return (
-            <Grid style={{ height: '100%' }} textAlign='center' verticalAlign='middle' padded>
-                <Grid.Column style={{ maxWidth: 400 }}>
-                {
-                    !isSignup && (
-                        <Header size="small" textAlign="left">You need to sign in or sign up before continuing.</Header>
-                    )
-                }
-                <Segment padded>
-                    <Form>
-                        {   isSignup ? (
-                                <Header as="h1" size="huge" textAlign="center">Sign Up</Header>
-                            ) : (
-                                <Header as="h1" size="huge" textAlign="center">Sign In</Header>
-                            )
-                        }
-                        <Form.Input type="email" textAlign="left" value={email} onChange={(event) => this.handleChange(event, setEmail)} fluid label="Email" />
-                        <Form.Input type="password" textAlign="left" value={password} onChange={(event) => this.handleChange(event, setPassword)} fluid label="Password"/>
-                        {
-                            isSignup && (
-                                <Form.Input type="password" value={confirmPassword} onChange={(event) => {this.handleChange(event, setConfirmPassword)}} fluid label="Confirm Password"/>
-                            )
-                        }
-                        {
-                            (Object.keys(error).length !== 0) && (
-                                <Message error header={error.header} content={error.content} visible />
-                            )
-                        }
-                        {
-                            isSignup ? (
-                                <div>
-                                    <Button type="submit" color="red" fluid size="large" onClick={(event) => this.submitAuthForm(event, email, password, confirmPassword, isSignup)}>Sign Up</Button>
-                                    <Divider hidden />
-                                    <Button fluid onClick={(event) => this.handleIsSignup(event, setIsSignup, false)}>Sign In</Button>
-                                </div>
-                            ) : (
-                                <div>
-                                    <Button type="submit" color="red" fluid size="large" onClick={(event) => this.submitAuthForm(event, email, password, '', isSignup)}>Sign In</Button>
-                                    <Divider hidden />
-                                    <Button fluid onClick={(event) => this.handleIsSignup(event, setIsSignup, true)}>Sign Up</Button>
-                                </div>
-                            )
-                        }
-                    </Form>
-                </Segment>
-                </Grid.Column>
+            <Grid style={{ height: '100%' }} textAlign="center" verticalAlign='middle' padded>
+                <Grid.Row></Grid.Row>
+                <Grid.Row></Grid.Row>
+                <Grid.Row></Grid.Row>
+                <Grid.Row></Grid.Row>
+                <Grid.Row>
+                    <Grid.Column style={{ maxWidth: 400 }}>
+                    {
+                        !isSignup && (
+                            <Header size="small" textAlign="center">You need to sign in or sign up before continuing.</Header>
+                        )
+                    }
+                    <Segment padded>
+                        <Form>
+                            {   isSignup ? (
+                                    <Header as="h1" size="huge" textAlign="center">Sign Up</Header>
+                                ) : (
+                                    <Header as="h1" size="huge" textAlign="center">Sign In</Header>
+                                )
+                            }
+                            <Form.Input type="email" textAlign="left" value={email} onChange={(event) => this.handleChange(event, setEmail)} fluid label="Email" />
+                            <Form.Input type="password" textAlign="left" value={password} onChange={(event) => this.handleChange(event, setPassword)} fluid label="Password (6 character min.)"/>
+                            {
+                                isSignup && (
+                                    <Form.Input type="password" value={confirmPassword} onChange={(event) => {this.handleChange(event, setConfirmPassword)}} fluid label="Confirm Password"/>
+                                )
+                            }
+                            {
+                                (Object.keys(error).length !== 0) && (
+                                    <Message error header={error.header} content={error.content} visible />
+                                )
+                            }
+                            {
+                                isSignup ? (
+                                    <div>
+                                        <Button type="submit" color="red" fluid size="large" onClick={(event) => this.submitAuthForm(event, email, password, confirmPassword, isSignup)}>Sign Up</Button>
+                                        <Divider hidden />
+                                        <Button fluid onClick={(event) => this.handleIsSignup(event, setIsSignup, false)}>Sign In</Button>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <Button type="submit" color="red" fluid size="large" onClick={(event) => this.submitAuthForm(event, email, password, '', isSignup)}>Sign In</Button>
+                                        <Divider hidden />
+                                        <Button fluid onClick={(event) => this.handleIsSignup(event, setIsSignup, true)}>Sign Up</Button>
+                                    </div>
+                                )
+                            }
+                            </Form>
+                        </Segment>
+                    </Grid.Column>
+                </Grid.Row>
             </Grid>
         )
     }
