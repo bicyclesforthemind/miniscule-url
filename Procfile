@@ -1,0 +1,1 @@
+web: sh -c 'cd ./miniscule-url-server/ && exec rails s -p 3001'

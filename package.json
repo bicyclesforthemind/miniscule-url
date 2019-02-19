@@ -1,0 +1,11 @@
+{
+    "name": "miniscule-url",
+    "engines": {
+      "node": "6.3.1"
+    },
+    "scripts": {
+      "build": "cd miniscule-url-client && npm install && npm run build && cd ..",
+      "deploy": "cp -a miniscule-url-client/build/. miniscule-url-server/public/",
+      "postinstall": "npm run build && npm run deploy && echo 'Client built!'"
+    }
+  }
