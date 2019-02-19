@@ -68,7 +68,6 @@ export const getUrls = () => {
 
             const response = await axios.get(`${API_URL}/api/v1/urls`, getRequestHeaders());
 
-            console.log(`response: ${JSON.stringify(response)}`);
 
             dispatch(getUrlsSuccess(response.data));
         }
@@ -90,7 +89,10 @@ export const postUrl = (url) => {
             dispatch(postUrlSuccess());
         }
         catch (error) {
-            dispatch(postUrlError(error));
+            dispatch(postUrlError({
+                header: 'Invalid URL', 
+                content: 'Please try again.'
+            }));
         }
     };
 };

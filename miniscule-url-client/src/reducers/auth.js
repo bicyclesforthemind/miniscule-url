@@ -12,7 +12,8 @@ import {
     SET_PASSWORD,
     SET_CONFIRM_PASSWORD,
     SET_AUTH_TOKEN,
-    SET_IS_SIGNUP
+    SET_IS_SIGNUP,
+    SET_ERROR
 } from '../actions/auth';
 
 const initialState = {
@@ -38,6 +39,7 @@ const authReducer = (state = initialState, action) => {
                 email: '',
                 password: '',
                 confirmPassword: '',
+                error: {},
                 isSignup: !state.isSignup,
                 isLoading: false
             };
@@ -57,6 +59,7 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 email: '',
                 password: '',
+                error: {},
                 isLoggedIn: !state.isLoggedIn,
                 isLoading: false
             };
@@ -74,6 +77,7 @@ const authReducer = (state = initialState, action) => {
         case LOGOUT_SUCCESS:
             return {
                 ...state,
+                error: {},
                 isLoggedIn: !state.isLoggedIn,
                 isLoading: false
             };
@@ -104,8 +108,12 @@ const authReducer = (state = initialState, action) => {
                 isSignup: action.payload
             };
         case SET_AUTH_TOKEN:
-            localStorage.setItem('user', action.payload); 
             return state;
+        case SET_ERROR:
+            return {
+                ...state,
+                error: action.payload
+            }
         default:
             return state;
     }

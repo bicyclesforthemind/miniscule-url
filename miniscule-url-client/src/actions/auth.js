@@ -26,6 +26,7 @@ export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_CONFIRM_PASSWORD = 'SET_CONFIRM_PASSWORD';
 export const SET_IS_SIGNUP = 'SET_IS_SIGNUP';
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
+export const SET_ERROR = 'SET_ERROR';
 
 const signupRequest = () => ({
     type: SIGNUP_REQUEST
@@ -91,6 +92,11 @@ export const setAuthToken = (authToken) => ({
     payload: authToken
 }); 
 
+export const setError = (error) => ({
+    type: SET_ERROR,
+    payload: error
+});
+
 export const signup = (email, password) => {
     return async (dispatch) => {
         try {
@@ -108,7 +114,10 @@ export const signup = (email, password) => {
             dispatch(signupSuccess());
         }
         catch (error) {
-            dispatch(signupError(error));
+            dispatch(signupError({
+                header: 'Invalid Signup Credientials',
+                content: 'Please try again.'
+            }));
         }
     };
 };
@@ -125,14 +134,16 @@ export const login = (email, password) => {
                 }
             }, REQUEST_HEADERS);
 
-            console.log(`loginSuccess: ${JSON.stringify(response)}`);
 
-            dispatch(setAuthToken(response.headers.authorization));
-            // localStorage.setItem('user', response.headers.authorization);
+            // dispatch(setAuthToken(response.headers.authorization));
+            localStorage.setItem('user', response.headers.authorization);
             dispatch(loginSuccess());
         }
         catch (error) {
-            dispatch(loginError(error));
+            dispatch(loginError({
+                header: 'Invalid Signin Credientials',
+                content: 'Please try again.'
+            }));
         }
     };
 };
@@ -150,7 +161,7 @@ export const logout = () => {
                 }
             });
 
-            localStorage.clear();
+            localStorage.removeItem('user');
             dispatch(logoutSuccess());
         }
         catch (error) {

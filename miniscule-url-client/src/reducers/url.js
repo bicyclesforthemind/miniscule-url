@@ -32,6 +32,7 @@ const urlReducer = (state = initialState, action) => {
             return {
                 ...state,
                 url: '',
+                error: {},
                 isLoading: false
             };
         case POST_URL_ERROR:
